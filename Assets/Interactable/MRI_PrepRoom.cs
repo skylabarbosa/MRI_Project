@@ -1,6 +1,6 @@
+using UnityEngine;
 
-
-public class MRI_PrepRoom : MonoBehaviour,IInteractable
+public class MRI_PrepRoom : MonoBehaviour, IInteractable
 {
     public WorldInteractUI worldInteractUI;
         private bool Get_Drop = false;
