@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 using System.Collections;
 
 public class MRI_MachineUse : MonoBehaviour, IInteractable
@@ -8,6 +7,10 @@ public class MRI_MachineUse : MonoBehaviour, IInteractable
     public GameObject mriCam;
     public GameObject Player;
     public Animator MRIAnimator;
+
+    public AudioSource MRIaudioController;
+
+      public WorldInteractUI worldInteractUI;
     public string GetInteractText()
     {
         return UseMRI ? "No use" : "Use";
@@ -20,19 +23,34 @@ public class MRI_MachineUse : MonoBehaviour, IInteractable
 
     public void OnInteract()
     {
-        UseMRI = !UseMRI;
-        playerCam.SetActive(UseMRI);
-        mriCam.SetActive(!UseMRI);
-        Player.SetActive(UseMRI);
+        UseMRI = true;
+        playerCam.SetActive(false);
+        Player.SetActive(false);
+        mriCam.SetActive(true);
+               worldInteractUI.Show(
+            "[E] " +
+            GetInteractText());
         StartCoroutine(DelayonMovingBed());
     }
 
     IEnumerator DelayonMovingBed ()
-    {
-        yield return new WaitForSeconds(2);
+    { 
+        worldInteractUI.Hide();
+        yield return new WaitForSeconds(1);
         MRIAnimator.SetBool("MRI_INOUT",true);
-        yield return new WaitForSeconds(6);
+
+        yield return new WaitForSeconds(5);
+        MRIaudioController.Play();
+        
+        yield return new WaitForSeconds(10);
         MRIAnimator.SetBool("MRI_INOUT", false);
+        MRIaudioController.Stop();
+        yield return new WaitForSeconds(6);
+        playerCam.SetActive(true);
+        Player.SetActive(true);
+        mriCam.SetActive(false);
+
+       
     }
 
 }
